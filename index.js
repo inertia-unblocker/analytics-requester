@@ -53,7 +53,7 @@ app.get('/getData', async (req, res) => {
 
 		let data = { stats, pageviews };
 
-		let finalData = {
+		let finalData = [{
 			columns_daily: [
 				{
 					key: 'name',
@@ -106,7 +106,7 @@ app.get('/getData', async (req, res) => {
 					value: value,
 				};
 			}) : [],
-		};
+		}];
 
 		res.status(500).json(finalData);
 	} catch (err) {
