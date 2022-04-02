@@ -1,0 +1,24 @@
+{
+  "name": "analytics-requester",
+  "version": "1.0.0",
+  "description": "Secrets...",
+  "main": "index.js",
+  "repository": "https://github.com/inertia-unblocker/analytics-requester",
+  "author": "Angad Tendulkar <angad.tendulkar@gmail.com>",
+  "license": "GPL-3.0",
+  "private": false,
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "node-fetch": "2"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint --fix ."
+  }
+}
