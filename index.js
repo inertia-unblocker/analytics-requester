@@ -207,12 +207,12 @@ app.get('/getData', async (req, res) => {
 				{
 					key: '1',
 					name: 'Bounces',
-					value: data.stats.bounces,
+					value: data.stats.bounces.value,
 				},
 				{
 					key: '2',
 					name: 'Pageviews',
-					value: data.stats.pageviews,
+					value: data.stats.pageviews.value,
 				},
 				{
 					key: '3',
@@ -222,7 +222,7 @@ app.get('/getData', async (req, res) => {
 				{
 					key: '4',
 					name: 'Visitors',
-					value: data.stats.uniques,
+					value: data.stats.uniques.value,
 				}
 			],
 			columns_hourly: [
