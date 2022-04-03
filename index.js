@@ -91,6 +91,47 @@ function convertTimeToTimeZone(time) {
 	return `${hr}:${mi}${ap}`;
 }
 
+function convertSec(sec) {
+	let wk = 0;
+	let day = 0;
+	let hr = 0;
+	let min = 0;
+
+	while (sec >= 60) {
+		min += 1;
+		sec -= 60;
+	}
+
+	while (min >= 60) {
+		hr++;
+		min -= 60;
+	}
+
+	while (hr >= 24) {
+		day++;
+		hr -= 24;
+	}
+
+	while (day >= 7) {
+		wk++;
+		day -= 7;
+	}
+
+	wkstr = wk ? `${wk}w, ` : '';
+	daystr = day ? `${day}d, ` : '';
+	hrstr = hr ? `${hr}` : '00';
+	minstr = min ? `${min}` : '00';
+	secstr = sec ? `${sec}` : '00';
+
+	hrstr  = hrstr.length  == 1 ? '0' + hrstr : hrstr;
+	minstr = minstr.length == 1 ? '0' + minstr : minstr;
+	secstr = secstr.length == 1 ? '0' + secstr : secstr;
+
+	return `${wkstr}${daystr}${hrstr}h ${minstr}m ${secstr}s`;
+}
+
+
+
 app.options('/getData', cors());
 app.get('/getData', async (req, res) => {
 	try {
@@ -149,6 +190,8 @@ app.get('/getData', async (req, res) => {
 			});
 		}
 
+		let totaltime = convertSec(parseInt(data.stats.totaltime.value));
+
 		let finalData = {
 			columns_daily: [
 				{
@@ -174,7 +217,7 @@ app.get('/getData', async (req, res) => {
 				{
 					key: '3',
 					name: 'Total Time',
-					value: data.stats.totaltime,
+					value: totaltime,
 				},
 				{
 					key: '4',
