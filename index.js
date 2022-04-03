@@ -155,9 +155,9 @@ app.get('/getData', async (req, res) => {
 		// ======= FORMATTING ======= //
 		let data = { stats, pageviews };
 		let rows_hourly = [];
-		for (let i=0; i<data.pageviews.sessions.length; i++) {
-			let arrayDate = from24to12(data.pageviews.sessions[i].t.split(' ')[1]);
-			let arrayValue = data.pageviews.sessions[i].y;
+		for (let i=0; i<data.pageviews.pageviews.length; i++) {
+			let arrayDate = from24to12(data.pageviews.pageviews[i].t.split(' ')[1]);
+			let arrayValue = data.pageviews.pageviews[i].y;
 	
 			rows_hourly.push({
 				key: `${i+1}`,
