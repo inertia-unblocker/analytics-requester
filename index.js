@@ -60,7 +60,7 @@ function from24to12(hmsString) {
 	m = m.length == 1 ? '0' + m : m;
 	s = s.length == 1 ? '0' + s : s;
 
-	return `${h}:${m}:${s} ${ap}`;
+	return `${h}:${m} ${ap}`;
 }
 
 function convertSec(sec) {
