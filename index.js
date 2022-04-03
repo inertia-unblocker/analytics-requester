@@ -23,7 +23,8 @@ function convertTimeToTimeZone(time) {
 	let mi = time[1];
 	let sc = time[2];
 
-	let tz = new Date().toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
+	let tz = new Date().toLocaleTimeString('en-us', {timeZoneName: 'short'}).split(' ')[2];
+	console.log(tz);
 	let offset = 0;
 	let offsetMin = 0;
 
