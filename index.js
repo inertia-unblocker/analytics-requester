@@ -2,7 +2,7 @@ const express = require('express'),
 	bodyParser = require('body-parser'),
 	cors = require('cors'),
 	fetch = require('node-fetch'),
-	timezones = require('./timezones.json'),
+	moment = require('moment-timezone'),
 	app = express(),
 	PORT = 5000,
 	umamiUsername = process.env.UMAMI_USERNAME || 'TheAlphaReturns',
@@ -80,34 +80,11 @@ TimeDate = class timeDateUtils {
 		return `${h}:${m} ${ap}`;
 	}
 
-	getTZData(tz) {
-		let tzData = '';
-		
-		try { tzData = timezones.filter(timezone => timezone.abbr == tz)[0]; }
-		catch (e) { 
-			tz = tz.replace('GMT', 'UTC');
-			tz = tz.replace('UTC', '');
-			
-			tzData = timezones.filter(timezone => timezone.offset == parseInt(tz))[0]; 
-		}
-	
-		return tzData;
-	}
+	getStartEndTime(offset) {
+		let startTime = moment().tz(offset).startOf('day').valueOf();
+		let endTime = moment().tz(offset).endOf('day').valueOf();
 
-	getStartEndTime(tzData) {
-		const dateObj = new Date();
-
-		let date = dateObj.getDate();
-		let month = dateObj.getMonth() + 1;
-		let year = dateObj.getFullYear();
-
-		let thisMorning = new Date(`${year}-${month}-${date} 00:00:00 ${tzData.abbr}`);
-		let thisEvening = new Date(`${year}-${month}-${date} 23:59:59 ${tzData.abbr}`);
-
-		let thisMorningMS = thisMorning.getTime();
-		let thisEveningMS = thisEvening.getTime();
-
-		return {thisMorningMS, thisEveningMS};
+		return { startTime, endTime };
 	}
 };
 
@@ -143,8 +120,7 @@ app.options('/getData', cors());
 app.get('/getData', async (req, res) => {
 	try {
 		// ======== BOILERPLATE ======== //
-		const tzData = timeDate.getTZData(req.query.tz);
-		const {thisMorningMS, thisEveningMS} = timeDate.getStartEndTime(tzData);
+		const { startTime, endTime } = timeDate.getStartEndTime(req.query.tz);
 		
 
 		// ======== DATA ======== //
@@ -154,8 +130,8 @@ app.get('/getData', async (req, res) => {
 		const websites = await net.get(`${umamiUrl}/api/websites`, {}, headers);
 		const website_id = websites.filter(website => website.name.toLowerCase() === 'inertia')[0].website_id;
 
-		let stats = await net.get(`${umamiUrl}/api/website/${website_id}/stats`, {start_at: thisMorningMS, end_at: thisEveningMS }, headers);
-		let pageviews = await net.get(`${umamiUrl}/api/website/${website_id}/pageviews`, { start_at: thisMorningMS, end_at: thisEveningMS, unit: 'hour', tz: 'America/New_York' }, headers);
+		let stats = await net.get(`${umamiUrl}/api/website/${website_id}/stats`, {start_at: startTime, end_at: endTime }, headers);
+		let pageviews = await net.get(`${umamiUrl}/api/website/${website_id}/pageviews`, { start_at: startTime, end_at: endTime, unit: 'hour', tz: req.query.tz }, headers);
 
 
 		// ======= FORMATTING ======= //
